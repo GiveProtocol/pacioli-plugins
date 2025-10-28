@@ -9,10 +9,6 @@
   },
   "author": "Pacioli Contributors",
   "license": "AGPL-3.0-only",
-  "workspaces": [
-    "packages/*",
-    "packages/example-plugins/*"
-  ],
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --parallel dev",
