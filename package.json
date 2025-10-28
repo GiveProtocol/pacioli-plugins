@@ -1,0 +1,42 @@
+{
+  "name": "@pacioli/plugins-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pacioli Plugin System - Monorepo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GiveProtocol/pacioli-plugins.git"
+  },
+  "author": "Pacioli Contributors",
+  "license": "(MIT OR Apache-2.0)",
+  "workspaces": [
+    "packages/*",
+    "packages/example-plugins/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "create-plugin": "node scripts/create-plugin.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}

@@ -1,0 +1,65 @@
+{
+  "name": "@pacioli/plugin-sdk",
+  "version": "0.1.0",
+  "description": "Official Plugin SDK for Pacioli",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "pacioli",
+    "plugin",
+    "sdk",
+    "crypto",
+    "accounting",
+    "polkadot"
+  ],
+  "author": "Pacioli Contributors",
+  "license": "(MIT OR Apache-2.0)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GiveProtocol/pacioli-plugins.git",
+    "directory": "packages/plugin-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/GiveProtocol/pacioli-plugins/issues"
+  },
+  "homepage": "https://docs.pacioli.io/plugins/sdk",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "@vitest/coverage-v8": "^1.0.4",
+    "eslint": "^8.56.0",
+    "react": "^19.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}
