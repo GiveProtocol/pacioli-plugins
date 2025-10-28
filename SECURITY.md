@@ -29,6 +29,7 @@ Security is critical for a financial application like Pacioli. We take all secur
 Send an email to: **security@pacioli.io**
 
 Include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
@@ -79,19 +80,20 @@ Plugins must declare all permissions in their manifest:
 
 ```typescript
 permissions: [
-  'transactions:read',      // Read transaction data
-  'transactions:write',     // Modify transactions
-  'accounts:read',          // Read account data
-  'accounts:write',         // Modify accounts
-  'network:external',       // Make external API calls
-  'storage:local',          // Local storage access
-  'ui:settings',            // Settings panel access
-]
+  'transactions:read', // Read transaction data
+  'transactions:write', // Modify transactions
+  'accounts:read', // Read account data
+  'accounts:write', // Modify accounts
+  'network:external', // Make external API calls
+  'storage:local', // Local storage access
+  'ui:settings', // Settings panel access
+];
 ```
 
 ### Secure Coding Guidelines
 
 **Input Validation**
+
 ```typescript
 // Always validate and sanitize inputs
 function processTransaction(input: unknown) {
@@ -101,6 +103,7 @@ function processTransaction(input: unknown) {
 ```
 
 **Avoid Hardcoded Secrets**
+
 ```typescript
 // BAD - Never do this
 const API_KEY = 'sk_live_abc123';
@@ -110,6 +113,7 @@ const apiKey = await context.storage.get('api_key');
 ```
 
 **Safe External Requests**
+
 ```typescript
 // Validate URLs and use HTTPS
 function fetchExternalData(url: string) {
@@ -121,6 +125,7 @@ function fetchExternalData(url: string) {
 ```
 
 **Error Handling**
+
 ```typescript
 // Don't expose sensitive information in errors
 try {
@@ -206,10 +211,12 @@ If we discover vulnerabilities in community plugins:
 ## Questions?
 
 For non-sensitive security questions:
+
 - GitHub Discussions
 - Community Forum
 
 For sensitive security matters:
+
 - **security@pacioli.io**
 
 ---

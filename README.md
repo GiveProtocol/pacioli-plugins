@@ -129,12 +129,12 @@ export default createPlugin(manifest, {
 
 ### Official Plugins
 
-| Plugin | Description | Status |
-|--------|-------------|--------|
+| Plugin                              | Description                 | Status      |
+| ----------------------------------- | --------------------------- | ----------- |
 | `@pacioli/plugin-quickbooks-export` | Export to QuickBooks format | Coming Soon |
-| `@pacioli/plugin-xero-export` | Export to Xero format | Coming Soon |
-| `@pacioli/plugin-tax-calculator-us` | US tax calculations | Coming Soon |
-| `@pacioli/plugin-ml-categorizer` | ML-powered categorization | Coming Soon |
+| `@pacioli/plugin-xero-export`       | Export to Xero format       | Coming Soon |
+| `@pacioli/plugin-tax-calculator-us` | US tax calculations         | Coming Soon |
+| `@pacioli/plugin-ml-categorizer`    | ML-powered categorization   | Coming Soon |
 
 ### Community Plugins
 
@@ -231,16 +231,19 @@ Full API reference: [docs.pacioli.io/api/plugins](https://docs.pacioli.io/api/pl
 ## Roadmap
 
 ### Current (v0.1)
+
 - Plugin SDK development
 - Example plugins
 - Documentation
 
 ### Coming Soon (v0.2)
+
 - Plugin marketplace
 - Visual plugin builder
 - Plugin templates
 
 ### Future
+
 - Plugin revenue sharing
 - Plugin analytics
 - Plugin certification program

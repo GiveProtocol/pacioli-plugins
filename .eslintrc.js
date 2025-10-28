@@ -4,10 +4,7 @@ module.exports = {
     node: true,
     es2022: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2022,
@@ -18,11 +15,5 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-explicit-any': 'warn',
   },
-  ignorePatterns: [
-    'dist',
-    'node_modules',
-    'coverage',
-    '*.config.js',
-    '*.config.ts',
-  ],
+  ignorePatterns: ['dist', 'node_modules', 'coverage', '*.config.js', '*.config.ts'],
 };

@@ -115,10 +115,7 @@ export const manifest: PluginManifest = {
   description: 'What your plugin does',
   homepage: 'https://github.com/username/my-plugin',
   compatibleVersions: '^0.1.0', // Pacioli core versions
-  permissions: [
-    'transactions:read',
-    'accounts:read',
-  ],
+  permissions: ['transactions:read', 'accounts:read'],
 };
 ```
 
@@ -259,11 +256,13 @@ You can publish community plugins independently:
 
 1. **Choose scope** - Use `@pacioli-community/` or your own scope
 2. **Build your plugin**:
+
    ```bash
    pnpm build
    ```
 
 3. **Publish to npm**:
+
    ```bash
    npm publish --access public
    ```
