@@ -56,12 +56,7 @@ export default createPlugin(manifest, {
 Full TypeScript support with comprehensive type definitions:
 
 ```typescript
-import type {
-  Transaction,
-  Account,
-  Category,
-  PluginContext,
-} from '@pacioli/plugin-sdk';
+import type { Transaction, Account, Category, PluginContext } from '@pacioli/plugin-sdk';
 ```
 
 ### Database Access
@@ -146,18 +141,18 @@ Plugins must declare required permissions in their manifest:
 
 ```typescript
 permissions: [
-  'transactions:read',      // Read transaction data
-  'transactions:write',     // Modify transactions
-  'accounts:read',          // Read account data
-  'accounts:write',         // Modify accounts
-  'categories:read',        // Read categories
-  'categories:write',       // Modify categories
-  'network:external',       // Make external API calls
-  'storage:local',          // Local storage access
-  'ui:settings',            // Settings panel
-  'ui:menu',                // Menu items
-  'ui:dashboard',           // Dashboard widgets
-]
+  'transactions:read', // Read transaction data
+  'transactions:write', // Modify transactions
+  'accounts:read', // Read account data
+  'accounts:write', // Modify accounts
+  'categories:read', // Read categories
+  'categories:write', // Modify categories
+  'network:external', // Make external API calls
+  'storage:local', // Local storage access
+  'ui:settings', // Settings panel
+  'ui:menu', // Menu items
+  'ui:dashboard', // Dashboard widgets
+];
 ```
 
 ## API Reference
@@ -166,16 +161,16 @@ permissions: [
 
 ```typescript
 interface PluginManifest {
-  id: string;                    // Unique identifier (kebab-case)
-  name: string;                  // Display name
-  version: string;               // Semver version
-  author: string;                // Author name
-  description: string;           // Short description
-  homepage?: string;             // Homepage URL
-  compatibleVersions: string;    // Compatible Pacioli versions
-  permissions: string[];         // Required permissions
-  icon?: string;                 // Icon URL
-  tags?: string[];               // Tags for categorization
+  id: string; // Unique identifier (kebab-case)
+  name: string; // Display name
+  version: string; // Semver version
+  author: string; // Author name
+  description: string; // Short description
+  homepage?: string; // Homepage URL
+  compatibleVersions: string; // Compatible Pacioli versions
+  permissions: string[]; // Required permissions
+  icon?: string; // Icon URL
+  tags?: string[]; // Tags for categorization
 }
 ```
 
@@ -240,10 +235,7 @@ export default createPlugin(
             category_id: category.id,
           });
 
-          context.ui.showNotification(
-            `Transaction categorized as ${categoryName}`,
-            'success'
-          );
+          context.ui.showNotification(`Transaction categorized as ${categoryName}`, 'success');
         }
       });
     },
@@ -275,9 +267,11 @@ export default createPlugin(
           const transactions = await context.db.transactions.findAll();
 
           // Create CSV
-          const csv = transactions.map(tx =>
-            `${tx.timestamp},${tx.hash},${tx.from_address},${tx.to_address},${tx.value}`
-          ).join('\n');
+          const csv = transactions
+            .map(
+              (tx) => `${tx.timestamp},${tx.hash},${tx.from_address},${tx.to_address},${tx.value}`
+            )
+            .join('\n');
 
           // Trigger download (implementation depends on environment)
           console.log(csv);

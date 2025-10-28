@@ -11,7 +11,10 @@ import { z } from 'zod';
 // ============================================================================
 
 export const PluginManifestSchema = z.object({
-  id: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  id: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/),
   name: z.string().min(1),
   version: z.string().regex(/^\d+\.\d+\.\d+/),
   author: z.string().min(1),
@@ -140,9 +143,7 @@ export type PluginEvent =
   | { type: 'sync.completed'; data: { chainId: number; count: number } }
   | { type: 'sync.failed'; data: { chainId: number; error: string } };
 
-export type EventHandler<T extends PluginEvent = PluginEvent> = (
-  event: T
-) => void | Promise<void>;
+export type EventHandler<T extends PluginEvent = PluginEvent> = (event: T) => void | Promise<void>;
 
 export interface EventEmitter {
   on<T extends PluginEvent['type']>(
