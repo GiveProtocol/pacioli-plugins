@@ -2,8 +2,7 @@
 
 **Extensible Plugin System for Pacioli**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE-MIT)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE-APACHE)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
 
 Official plugin repository for [Pacioli](https://github.com/GiveProtocol/pacioli-core) - the open-source crypto accounting platform for the Polkadot ecosystem.
 
@@ -183,12 +182,9 @@ See [Security Policy](SECURITY.md) for details.
 
 ## License
 
-Dual-licensed under your choice of:
+Licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
-- **[MIT License](LICENSE-MIT)** - Simple and permissive
-- **[Apache License 2.0](LICENSE-APACHE)** - Includes patent protection
-
-Choose whichever works best for your use case.
+See [LICENSE](LICENSE) for the full license text.
 
 ---
 

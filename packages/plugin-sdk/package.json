@@ -15,8 +15,7 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE-MIT",
-    "LICENSE-APACHE"
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
@@ -37,7 +36,7 @@
     "polkadot"
   ],
   "author": "Pacioli Contributors",
-  "license": "(MIT OR Apache-2.0)",
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GiveProtocol/pacioli-plugins.git",

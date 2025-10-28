@@ -8,7 +8,7 @@
     "url": "git+https://github.com/GiveProtocol/pacioli-plugins.git"
   },
   "author": "Pacioli Contributors",
-  "license": "(MIT OR Apache-2.0)",
+  "license": "AGPL-3.0-only",
   "workspaces": [
     "packages/*",
     "packages/example-plugins/*"
