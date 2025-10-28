@@ -1,0 +1,21 @@
+version = 1
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  plugins = []
+  environment = [
+    "nodejs"
+  ]
+  style_guide = "airbnb"
+  dialect = "typescript"
+
+[[analyzers]]
+name = "secrets"
+enabled = true
+
+[[transformers]]
+name = "prettier"
+enabled = true
