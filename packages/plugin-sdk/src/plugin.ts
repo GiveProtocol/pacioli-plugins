@@ -33,10 +33,7 @@ import { Plugin, PluginLifecycle, PluginManifest, PluginManifestSchema } from '.
  * );
  * ```
  */
-export function createPlugin(
-  manifest: PluginManifest,
-  lifecycle: PluginLifecycle = {}
-): Plugin {
+export function createPlugin(manifest: PluginManifest, lifecycle: PluginLifecycle = {}): Plugin {
   // Validate manifest
   const validatedManifest = PluginManifestSchema.parse(manifest);
 

@@ -56,12 +56,7 @@ export default createPlugin(manifest, {
 Full TypeScript support with comprehensive type definitions:
 
 ```typescript
-import type {
-  Transaction,
-  Account,
-  Category,
-  PluginContext,
-} from '@pacioli/plugin-sdk';
+import type { Transaction, Account, Category, PluginContext } from '@pacioli/plugin-sdk';
 ```
 
 ### Database Access
@@ -148,18 +143,18 @@ Pacioli uses a permission-based security model. Plugins must declare all require
 
 ```typescript
 permissions: [
-  'transactions:read',      // Read transaction data
-  'transactions:write',     // Modify transactions
-  'accounts:read',          // Read account data
-  'accounts:write',         // Modify accounts
-  'categories:read',        // Read categories
-  'categories:write',       // Modify categories
-  'network:external',       // Make external API calls
-  'storage:local',          // Local storage access
-  'ui:settings',            // Settings panel
-  'ui:menu',                // Menu items
-  'ui:dashboard',           // Dashboard widgets
-]
+  'transactions:read', // Read transaction data
+  'transactions:write', // Modify transactions
+  'accounts:read', // Read account data
+  'accounts:write', // Modify accounts
+  'categories:read', // Read categories
+  'categories:write', // Modify categories
+  'network:external', // Make external API calls
+  'storage:local', // Local storage access
+  'ui:settings', // Settings panel
+  'ui:menu', // Menu items
+  'ui:dashboard', // Dashboard widgets
+];
 ```
 
 ### Permission Enforcement Model
@@ -179,6 +174,7 @@ const manifest = {
 ```
 
 You're declaring what your plugin **intends to do**. The host app will:
+
 1. Show these permissions to users before installation
 2. Enforce these permissions by checking before API calls
 3. Throw errors if you try to use APIs without proper permissions
@@ -209,9 +205,7 @@ class PermissionEnforcedTransactionRepository implements TransactionRepository {
   // Read operation - check 'transactions:read'
   async findAll(filters?: TransactionFilters): Promise<Transaction[]> {
     if (!this.plugin.manifest.permissions.includes('transactions:read')) {
-      throw new Error(
-        `Plugin '${this.plugin.manifest.id}' missing permission: transactions:read`
-      );
+      throw new Error(`Plugin '${this.plugin.manifest.id}' missing permission: transactions:read`);
     }
     return this.actualRepository.findAll(filters);
   }
@@ -219,9 +213,7 @@ class PermissionEnforcedTransactionRepository implements TransactionRepository {
   // Write operation - check 'transactions:write'
   async update(id: string, updates: Partial<Transaction>): Promise<Transaction> {
     if (!this.plugin.manifest.permissions.includes('transactions:write')) {
-      throw new Error(
-        `Plugin '${this.plugin.manifest.id}' missing permission: transactions:write`
-      );
+      throw new Error(`Plugin '${this.plugin.manifest.id}' missing permission: transactions:write`);
     }
     return this.actualRepository.update(id, updates);
   }
@@ -234,10 +226,7 @@ function activatePlugin(plugin: Plugin) {
   const context: PluginContext = {
     manifest: plugin.manifest,
     db: {
-      transactions: new PermissionEnforcedTransactionRepository(
-        plugin,
-        realTransactionRepository
-      ),
+      transactions: new PermissionEnforcedTransactionRepository(plugin, realTransactionRepository),
       // ... wrap other repositories
     },
     // ... other context properties
@@ -250,12 +239,14 @@ function activatePlugin(plugin: Plugin) {
 ### Permission Best Practices
 
 **For Plugin Developers:**
+
 - Only request permissions you actually need
 - Explain why you need each permission in your plugin description
 - Handle permission errors gracefully
 - Don't request `write` permissions if you only need `read`
 
 **For Host App Developers:**
+
 - Always enforce permissions on every API call
 - Show clear permission prompts to users
 - Log permission violations for debugging
@@ -279,13 +270,14 @@ if (result.success) {
   console.log('Valid manifest:', result.data);
 } else {
   console.error('Validation errors:');
-  result.error.issues.forEach(issue => {
+  result.error.issues.forEach((issue) => {
     console.error(`  ${issue.path.join('.')}: ${issue.message}`);
   });
 }
 ```
 
 Example validation error output:
+
 ```
 Validation errors:
   id: Invalid
@@ -293,6 +285,7 @@ Validation errors:
 ```
 
 For stricter validation that throws on error:
+
 ```typescript
 // This will throw ZodError if validation fails
 const manifest = PluginManifestSchema.parse(manifestData);
@@ -334,16 +327,16 @@ This approach avoids version conflicts while giving you full access to Zod's fea
 
 ```typescript
 interface PluginManifest {
-  id: string;                    // Unique identifier (kebab-case)
-  name: string;                  // Display name
-  version: string;               // Semver version
-  author: string;                // Author name
-  description: string;           // Short description
-  homepage?: string;             // Homepage URL
-  compatibleVersions: string;    // Compatible Pacioli versions
-  permissions: string[];         // Required permissions
-  icon?: string;                 // Icon URL
-  tags?: string[];               // Tags for categorization
+  id: string; // Unique identifier (kebab-case)
+  name: string; // Display name
+  version: string; // Semver version
+  author: string; // Author name
+  description: string; // Short description
+  homepage?: string; // Homepage URL
+  compatibleVersions: string; // Compatible Pacioli versions
+  permissions: string[]; // Required permissions
+  icon?: string; // Icon URL
+  tags?: string[]; // Tags for categorization
 }
 ```
 
@@ -408,10 +401,7 @@ export default createPlugin(
             categoryId: category.id,
           });
 
-          context.ui.showNotification(
-            `Transaction categorized as ${categoryName}`,
-            'success'
-          );
+          context.ui.showNotification(`Transaction categorized as ${categoryName}`, 'success');
         }
       });
     },
@@ -443,9 +433,9 @@ export default createPlugin(
           const transactions = await context.db.transactions.findAll();
 
           // Create CSV
-          const csv = transactions.map(tx =>
-            `${tx.timestamp},${tx.hash},${tx.fromAddress},${tx.toAddress},${tx.value}`
-          ).join('\n');
+          const csv = transactions
+            .map((tx) => `${tx.timestamp},${tx.hash},${tx.fromAddress},${tx.toAddress},${tx.value}`)
+            .join('\n');
 
           // Trigger download (implementation depends on environment)
           console.log(csv);
