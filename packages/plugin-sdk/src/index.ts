@@ -39,8 +39,4 @@ export type {
 export { PluginManifestSchema } from './types';
 
 // Export utilities
-export {
-  createPlugin,
-  hasPermission,
-  getPluginMetadata,
-} from './plugin';
+export { createPlugin, hasPermission, getPluginMetadata } from './plugin';
