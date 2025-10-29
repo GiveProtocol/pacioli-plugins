@@ -47,38 +47,35 @@ export function createPlugin(
 }
 
 /**
- * Validates a plugin manifest
+ * Checks if a plugin has declared a specific permission in its manifest
  *
- * @param manifest - Manifest to validate
- * @returns Validation result
- */
-export function validateManifest(manifest: unknown): {
-  valid: boolean;
-  errors?: string[];
-} {
-  try {
-    PluginManifestSchema.parse(manifest);
-    return { valid: true };
-  } catch (error) {
-    if (error instanceof Error) {
-      return {
-        valid: false,
-        errors: [error.message],
-      };
-    }
-    return {
-      valid: false,
-      errors: ['Unknown validation error'],
-    };
-  }
-}
-
-/**
- * Checks if a plugin has a specific permission
+ * **IMPORTANT**: This function only checks if a permission is DECLARED in the
+ * plugin's manifest. It does NOT enforce permissions. Permission enforcement
+ * must be implemented by the host application that loads plugins.
+ *
+ * This is a convenience helper equivalent to:
+ * ```typescript
+ * plugin.manifest.permissions.includes(permission)
+ * ```
  *
  * @param plugin - Plugin to check
  * @param permission - Permission to check for
- * @returns True if plugin has permission
+ * @returns True if the plugin has declared this permission in its manifest
+ *
+ * @example
+ * ```typescript
+ * const plugin = createPlugin({
+ *   id: 'my-plugin',
+ *   name: 'My Plugin',
+ *   permissions: ['transactions:read'],
+ *   // ...
+ * });
+ *
+ * hasPermission(plugin, 'transactions:read');  // true
+ * hasPermission(plugin, 'transactions:write'); // false
+ * ```
+ *
+ * @see {@link PluginContext} for how the host app should enforce permissions
  */
 export function hasPermission(plugin: Plugin, permission: string): boolean {
   return plugin.manifest.permissions.includes(permission);

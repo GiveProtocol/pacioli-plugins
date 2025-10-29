@@ -74,7 +74,7 @@ const transactions = await context.db.transactions.findByAddress(address);
 
 // Update transaction category
 await context.db.transactions.update(txId, {
-  category_id: categoryId,
+  categoryId: categoryId,
   notes: 'Payment for services',
 });
 
@@ -142,7 +142,9 @@ context.ui.showNotification('Transaction categorized!', 'success');
 
 ## Permissions
 
-Plugins must declare required permissions in their manifest:
+### Overview
+
+Pacioli uses a permission-based security model. Plugins must declare all required permissions in their manifest, and users can review these permissions before installing a plugin.
 
 ```typescript
 permissions: [
@@ -159,6 +161,172 @@ permissions: [
   'ui:dashboard',           // Dashboard widgets
 ]
 ```
+
+### Permission Enforcement Model
+
+**Important**: The SDK only defines the permission types. **Permission enforcement is the responsibility of the host application** that loads plugins.
+
+#### For Plugin Developers
+
+When you declare permissions in your manifest:
+
+```typescript
+const manifest = {
+  id: 'my-plugin',
+  permissions: ['transactions:read', 'transactions:write'],
+  // ...
+};
+```
+
+You're declaring what your plugin **intends to do**. The host app will:
+1. Show these permissions to users before installation
+2. Enforce these permissions by checking before API calls
+3. Throw errors if you try to use APIs without proper permissions
+
+Example of what happens at runtime:
+
+```typescript
+// ALLOWED: Plugin has 'transactions:write' permission
+await context.db.transactions.update(id, { notes: 'Updated' }); // Works
+
+// DENIED: Plugin doesn't have 'accounts:write' permission
+await context.db.accounts.update(id, { label: 'Updated' }); // Throws error
+```
+
+#### For Host Application Developers
+
+If you're building a host application that loads plugins, you must enforce permissions. Here's a reference implementation:
+
+```typescript
+import { Plugin, TransactionRepository, Transaction } from '@pacioli/plugin-sdk';
+
+class PermissionEnforcedTransactionRepository implements TransactionRepository {
+  constructor(
+    private plugin: Plugin,
+    private actualRepository: TransactionRepository
+  ) {}
+
+  // Read operation - check 'transactions:read'
+  async findAll(filters?: TransactionFilters): Promise<Transaction[]> {
+    if (!this.plugin.manifest.permissions.includes('transactions:read')) {
+      throw new Error(
+        `Plugin '${this.plugin.manifest.id}' missing permission: transactions:read`
+      );
+    }
+    return this.actualRepository.findAll(filters);
+  }
+
+  // Write operation - check 'transactions:write'
+  async update(id: string, updates: Partial<Transaction>): Promise<Transaction> {
+    if (!this.plugin.manifest.permissions.includes('transactions:write')) {
+      throw new Error(
+        `Plugin '${this.plugin.manifest.id}' missing permission: transactions:write`
+      );
+    }
+    return this.actualRepository.update(id, updates);
+  }
+
+  // Implement other methods with similar checks...
+}
+
+// When activating a plugin, wrap repositories with permission enforcement
+function activatePlugin(plugin: Plugin) {
+  const context: PluginContext = {
+    manifest: plugin.manifest,
+    db: {
+      transactions: new PermissionEnforcedTransactionRepository(
+        plugin,
+        realTransactionRepository
+      ),
+      // ... wrap other repositories
+    },
+    // ... other context properties
+  };
+
+  plugin.onActivate?.(context);
+}
+```
+
+### Permission Best Practices
+
+**For Plugin Developers:**
+- Only request permissions you actually need
+- Explain why you need each permission in your plugin description
+- Handle permission errors gracefully
+- Don't request `write` permissions if you only need `read`
+
+**For Host App Developers:**
+- Always enforce permissions on every API call
+- Show clear permission prompts to users
+- Log permission violations for debugging
+- Consider implementing permission scopes (e.g., read-only mode)
+
+## Validation
+
+The SDK uses [Zod](https://github.com/colinhacks/zod) for runtime validation and exports schemas you can use.
+
+### Basic Validation
+
+Use `safeParse()` for validation with detailed error messages:
+
+```typescript
+import { PluginManifestSchema } from '@pacioli/plugin-sdk';
+
+// Validate a manifest
+const result = PluginManifestSchema.safeParse(manifestData);
+
+if (result.success) {
+  console.log('Valid manifest:', result.data);
+} else {
+  console.error('Validation errors:');
+  result.error.issues.forEach(issue => {
+    console.error(`  ${issue.path.join('.')}: ${issue.message}`);
+  });
+}
+```
+
+Example validation error output:
+```
+Validation errors:
+  id: Invalid
+  version: Invalid
+```
+
+For stricter validation that throws on error:
+```typescript
+// This will throw ZodError if validation fails
+const manifest = PluginManifestSchema.parse(manifestData);
+```
+
+### Using Zod in Your Plugin
+
+The SDK includes Zod as a dependency, so you can use the exported schemas without installing Zod separately. However, if you want to use Zod for your own validation needs, you should install it explicitly:
+
+```bash
+npm install zod
+# or
+pnpm add zod
+```
+
+Then you can use Zod alongside the SDK:
+
+```typescript
+import { PluginManifestSchema } from '@pacioli/plugin-sdk';
+import { z } from 'zod';
+
+// Use SDK schemas
+const manifestResult = PluginManifestSchema.safeParse(data);
+
+// Define your own schemas
+const MyConfigSchema = z.object({
+  apiKey: z.string(),
+  enabled: z.boolean(),
+});
+
+const configResult = MyConfigSchema.safeParse(userConfig);
+```
+
+This approach avoids version conflicts while giving you full access to Zod's features when you need them.
 
 ## API Reference
 
@@ -237,7 +405,7 @@ export default createPlugin(
         const category = await context.db.categories.findByName(categoryName);
         if (category) {
           await context.db.transactions.update(tx.id, {
-            category_id: category.id,
+            categoryId: category.id,
           });
 
           context.ui.showNotification(
@@ -276,7 +444,7 @@ export default createPlugin(
 
           // Create CSV
           const csv = transactions.map(tx =>
-            `${tx.timestamp},${tx.hash},${tx.from_address},${tx.to_address},${tx.value}`
+            `${tx.timestamp},${tx.hash},${tx.fromAddress},${tx.toAddress},${tx.value}`
           ).join('\n');
 
           // Trigger download (implementation depends on environment)

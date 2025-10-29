@@ -6,9 +6,7 @@
 
 import { z } from 'zod';
 
-// ============================================================================
 // Plugin Manifest
-// ============================================================================
 
 export const PluginManifestSchema = z.object({
   id: z.string().min(1).regex(/^[a-z0-9-]+$/),
@@ -25,9 +23,7 @@ export const PluginManifestSchema = z.object({
 
 export type PluginManifest = z.infer<typeof PluginManifestSchema>;
 
-// ============================================================================
 // Permissions
-// ============================================================================
 
 export type Permission =
   | 'transactions:read'
@@ -42,23 +38,21 @@ export type Permission =
   | 'ui:menu'
   | 'ui:dashboard';
 
-// ============================================================================
 // Database Types
-// ============================================================================
 
 export interface Transaction {
   id: string;
   hash: string;
-  from_address: string;
-  to_address: string;
+  fromAddress: string;
+  toAddress: string;
   value: string;
-  gas_used: string | null;
-  gas_price: string | null;
-  block_number: number;
+  gasUsed: string | null;
+  gasPrice: string | null;
+  blockNumber: number;
   timestamp: number;
   status: 'success' | 'failed' | 'pending';
-  chain_id: number;
-  category_id: string | null;
+  chainId: number;
+  categoryId: string | null;
   notes: string | null;
 }
 
@@ -66,22 +60,20 @@ export interface Account {
   id: string;
   address: string;
   label: string | null;
-  chain_id: number;
+  chainId: number;
   balance: string | null;
-  last_synced: number | null;
+  lastSynced: number | null;
 }
 
 export interface Category {
   id: string;
   name: string;
   type: 'income' | 'expense' | 'transfer';
-  parent_id: string | null;
+  parentId: string | null;
   color: string | null;
 }
 
-// ============================================================================
 // Repository Interfaces
-// ============================================================================
 
 export interface TransactionRepository {
   findById(id: string): Promise<Transaction | null>;
@@ -122,9 +114,7 @@ export interface TransactionFilters {
   categoryId?: string;
 }
 
-// ============================================================================
 // Event System
-// ============================================================================
 
 export type PluginEvent =
   | { type: 'transaction.created'; data: Transaction }
@@ -156,9 +146,7 @@ export interface EventEmitter {
   emit(event: PluginEvent): void;
 }
 
-// ============================================================================
 // Storage API
-// ============================================================================
 
 export interface StorageAPI {
   get<T = unknown>(key: string): Promise<T | null>;
@@ -168,9 +156,7 @@ export interface StorageAPI {
   keys(): Promise<string[]>;
 }
 
-// ============================================================================
 // UI Integration
-// ============================================================================
 
 export interface MenuItem {
   id: string;
@@ -204,20 +190,74 @@ export interface UIContext {
   showNotification(message: string, type: 'info' | 'success' | 'warning' | 'error'): void;
 }
 
-// ============================================================================
 // Plugin Context
-// ============================================================================
 
+/**
+ * Plugin Context provided to plugins during activation
+ *
+ * The PluginContext gives plugins access to the host application's APIs.
+ *
+ * **PERMISSION ENFORCEMENT**: The host application implementing this interface
+ * is responsible for enforcing the permissions declared in the plugin's manifest.
+ * Each API should check the plugin's permissions before allowing operations.
+ *
+ * Example enforcement in host app:
+ * ```typescript
+ * class HostTransactionRepository implements TransactionRepository {
+ *   constructor(private plugin: Plugin) {}
+ *
+ *   async delete(id: string): Promise<void> {
+ *     // Enforce permissions before allowing operation
+ *     if (!this.plugin.manifest.permissions.includes('transactions:write')) {
+ *       throw new Error('Permission denied: transactions:write required');
+ *     }
+ *     // Perform actual deletion
+ *     await this.actualDelete(id);
+ *   }
+ * }
+ * ```
+ *
+ * @see {@link Permission} for available permission types
+ */
 export interface PluginContext {
+  /** Plugin's own manifest (read-only reference) */
   manifest: PluginManifest;
+
+  /**
+   * Database access APIs
+   *
+   * Host app should enforce:
+   * - `transactions:read` for read operations
+   * - `transactions:write` for write operations
+   * - `accounts:read` for read operations
+   * - `accounts:write` for write operations
+   * - `categories:read` for read operations
+   * - `categories:write` for write operations
+   */
   db: {
     transactions: TransactionRepository;
     accounts: AccountRepository;
     categories: CategoryRepository;
   };
+
+  /** Event system for subscribing to and emitting events */
   events: EventEmitter;
+
+  /**
+   * Persistent storage API
+   *
+   * Host app should enforce: `storage:local` permission
+   */
   storage: StorageAPI;
+
+  /**
+   * UI integration APIs
+   *
+   * Host app should enforce appropriate `ui:*` permissions
+   */
   ui: UIContext;
+
+  /** Logger for plugin messages (no permission required) */
   logger: {
     info(message: string, ...args: unknown[]): void;
     warn(message: string, ...args: unknown[]): void;
@@ -226,9 +266,7 @@ export interface PluginContext {
   };
 }
 
-// ============================================================================
 // Plugin Lifecycle
-// ============================================================================
 
 export interface PluginLifecycle {
   onActivate?(context: PluginContext): void | Promise<void>;
@@ -236,9 +274,7 @@ export interface PluginLifecycle {
   onSettingsChange?(settings: Record<string, unknown>): void | Promise<void>;
 }
 
-// ============================================================================
 // Plugin Interface
-// ============================================================================
 
 export interface Plugin extends PluginLifecycle {
   manifest: PluginManifest;

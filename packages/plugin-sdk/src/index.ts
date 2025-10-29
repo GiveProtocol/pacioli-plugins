@@ -41,10 +41,6 @@ export { PluginManifestSchema } from './types';
 // Export utilities
 export {
   createPlugin,
-  validateManifest,
   hasPermission,
   getPluginMetadata,
 } from './plugin';
-
-// Re-export zod for plugin developers
-export { z } from 'zod';
